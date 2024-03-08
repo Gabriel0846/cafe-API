@@ -10,8 +10,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedNativeQuery;
 import jakarta.persistence.Table;
+import lombok.Data;
 
+@NamedNativeQuery(name = "User.findByEmailId",query = "select u from User u where u.mail=:email")
+
+@Data
 @Entity
 @DynamicUpdate
 @DynamicInsert
@@ -36,65 +41,5 @@ public class User implements Serializable{
     private String status;
     @Column(name = "perfil")
     private String perfil;
-
-    public User() {
-        
-    }
-
-    public User(String nome, String telefone, String email, String password, String status, String perfil) {
-        this.nome = nome;
-        this.telefone = telefone;
-        this.email = email;
-        this.password = password;
-        this.status = status;
-        this.perfil = perfil;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
-    }
+    
 }
