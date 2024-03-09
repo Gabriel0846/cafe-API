@@ -26,19 +26,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<String> login(Map<String, String> requestMap) {
         log.info("Inside signup {}", requestMap);
-        if (validateSignUpMap(requestMap)) {
-            User user = userDao.findByEmailId(requestMap.get("email"));
-            if (Objects.isNull(user)) {
-                userDao.save(getUserFromMap(requestMap));
-                return CafeUtils.getResponseEntity("Registro concluido com sucesso.", HttpStatus.OK);
+        try {
+            if (validateSignUpMap(requestMap)) {
+                String email = requestMap.get("email");
+                User user = userDao.findByEmailId(email);
+                if (Objects.isNull(user)) {
+                    userDao.save(getUserFromMap(requestMap));
+                    return CafeUtils.getResponseEntity("Registro concluído com sucesso.", HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity("E-mail já existe.", HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
             }
-            else {
-                return CafeUtils.getResponseEntity("Email já existe.", HttpStatus.BAD_REQUEST);
-            }
+        } catch (Exception ex) {
+            log.error("Erro durante o login:", ex);
         }
-        else {
-            return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
-        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private boolean validateSignUpMap(Map<String, String> requestMap) {

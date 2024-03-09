@@ -14,7 +14,7 @@ import jakarta.persistence.NamedNativeQuery;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@NamedNativeQuery(name = "User.findByEmailId",query = "select u from User u where u.mail=:email")
+@NamedNativeQuery(name = "User.findByEmailId",query = "select u.email from usuario u where u.email=email")
 
 @Data
 @Entity
@@ -43,3 +43,4 @@ public class User implements Serializable{
     private String perfil;
     
 }
+
