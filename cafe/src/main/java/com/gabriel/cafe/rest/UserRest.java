@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "/usuario")
 public interface UserRest {
     
-    @PostMapping(path = "/login")
+    @PostMapping(path = "/cadastrar")
     public ResponseEntity<String> sigUp(@RequestBody(required = true) Map<String, String> requestMap);
 }
