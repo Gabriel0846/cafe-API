@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.cafe.JWT.CustomerUsersDetailsService;
-import com.gabriel.cafe.JWT.JwtFilter;
 import com.gabriel.cafe.JWT.JwtUtil;
 import com.gabriel.cafe.POJO.User;
 import com.gabriel.cafe.constents.CafeConstants;
@@ -43,8 +42,7 @@ public class UserServiceImpl implements UserService {
         log.info("Inside cadastrar {}", requestMap);
         try {
             if (validateSignUpMap(requestMap)) {
-                String email = requestMap.get("email");
-                User user = userDao.findByEmailId(email);
+                User user = userDao.findByEmailId(requestMap.get("email"));
                 if (Objects.isNull(user)) {
                     userDao.save(getUserFromMap(requestMap));
                     return CafeUtils.getResponseEntity("Registro concluído com sucesso.", HttpStatus.OK);
@@ -81,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> login(Map<String, String> requestMap) {
-        log.info("inside login"); //talvez esteja aqui
+        log.info("inside login", requestMap); 
         try {
             Authentication auth =  authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password"))
