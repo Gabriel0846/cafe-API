@@ -1,5 +1,7 @@
 package com.gabriel.cafe.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -7,17 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.cafe.JWT.CustomerUsersDetailsService;
+import com.gabriel.cafe.JWT.JwtFilter;
 import com.gabriel.cafe.JWT.JwtUtil;
 import com.gabriel.cafe.POJO.User;
 import com.gabriel.cafe.constents.CafeConstants;
 import com.gabriel.cafe.dao.UserDao;
 import com.gabriel.cafe.service.UserService;
 import com.gabriel.cafe.utils.CafeUtils;
+import com.gabriel.cafe.wrapper.UserWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +41,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     JwtUtil jwtUtil;
+
+    @Autowired
+    JwtFilter jwtFilter;
 
     @Override
     public ResponseEntity<String> cadastrar(Map<String, String> requestMap) {
@@ -94,10 +102,29 @@ public class UserServiceImpl implements UserService {
                     return new ResponseEntity<String>("{\"message\":\""+"Esperando aprovação do Admin."+"\"}", HttpStatus.BAD_REQUEST);
                 }
             }
+        } catch (BadCredentialsException ex) {
+            log.error("Credencial inválida", ex);
+            return new ResponseEntity<String>("{\"message\":\""+"Credencial inválida."+"\"}", HttpStatus.UNAUTHORIZED);
         } catch (Exception ex) {
-            log.error("{}", ex);
+            log.error("Erro durante a autenticação", ex);
+            return new ResponseEntity<String>("{\"message\":\""+"Erro durante a autenticação."+"\"}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<String>("{\"message\":\""+"Credencial errada."+"\"}", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>("{\"message\":\""+"Credencial inválida."+"\"}", HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @Override
+    public ResponseEntity<List<UserWrapper>> getAllUser() {
+        try {
+            if (jwtFilter.isAdmin()) {
+                
+            }else {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
 }

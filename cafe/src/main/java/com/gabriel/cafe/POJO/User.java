@@ -14,7 +14,9 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 import lombok.Data;
 
-@NamedNativeQuery(name = "User.findByEmailId",query = "select u from usuario u where u.email=:email") //select u.email from usuario u where u.email=email 
+@NamedNativeQuery(name = "User.findByEmailId", query = "select u.email from usuario u where u.email = :email")
+
+@NamedNativeQuery(name = "User.getAllUser", query = "select u.id, u.nome, u.email, u.telefone, u.status from usuario u where u.perfil = 'user'")
 
 @Data
 @Entity
