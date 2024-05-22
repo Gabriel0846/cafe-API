@@ -18,7 +18,7 @@ import lombok.Data;
 @DynamicInsert
 @Table(name = "usuario")
 @NamedQuery(name = "User.findByEmailId", query = "SELECT u FROM User u WHERE u.email = :email")
-@NamedQuery(name = "User.getAllUser", query = "SELECT u.id, u.nome, u.email, u.telefone, u.status FROM User u WHERE u.perfil = 'user'")
+@NamedQuery(name = "User.getAllUser", query = "SELECT new com.gabriel.cafe.wrapper.UserWrapper (u.id, u.nome, u.email, u.telefone, u.status) FROM User u WHERE u.perfil = 'user'")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
