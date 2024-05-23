@@ -19,6 +19,7 @@ import lombok.Data;
 @Table(name = "usuario")
 @NamedQuery(name = "User.findByEmailId", query = "SELECT u FROM User u WHERE u.email = :email")
 @NamedQuery(name = "User.getAllUser", query = "SELECT new com.gabriel.cafe.wrapper.UserWrapper (u.id, u.nome, u.email, u.telefone, u.status) FROM User u WHERE u.perfil = 'user'")
+@NamedQuery(name = "User.getAllAdmin", query = "SELECT u.email FROM User u WHERE u.perfil = 'admin'")
 @NamedQuery(name = "User.updateStatus", query = "update User u set u.status=:status where u.id=:id")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;

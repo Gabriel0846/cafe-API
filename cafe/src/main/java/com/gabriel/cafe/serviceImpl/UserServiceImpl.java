@@ -23,8 +23,8 @@ import com.gabriel.cafe.constents.CafeConstants;
 import com.gabriel.cafe.dao.UserDao;
 import com.gabriel.cafe.service.UserService;
 import com.gabriel.cafe.utils.CafeUtils;
+import com.gabriel.cafe.utils.EmailUtils;
 import com.gabriel.cafe.wrapper.UserWrapper;
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     JwtFilter jwtFilter;
+
+    @Autowired
+    EmailUtils emailUtils;
 
     @Override
     public ResponseEntity<String> cadastrar(Map<String, String> requestMap) {
@@ -132,6 +135,7 @@ public class UserServiceImpl implements UserService {
                 Optional<User> optional = userDao.findById(Integer.parseInt(requesMap.get("id")));
                 if (optional.isEmpty()) {
                     userDao.updateStatus(requesMap.get("status"), Integer.parseInt(requesMap.get("id")));
+                    sendMailToAllAdmin(requesMap.get("status"), optional.get().getEmail(), userDao.getAllAdmin());
                     return CafeUtils.getResponseEntity("Usuário atualizado com sucesso.", HttpStatus.OK);
                 } else {
                     CafeUtils.getResponseEntity("Id de usuário não existe", HttpStatus.OK);
@@ -143,5 +147,14 @@ public class UserServiceImpl implements UserService {
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private void sendMailToAllAdmin(String status, String user, List<String> allAdmin) {
+        allAdmin.remove(jwtFilter.getCurrentUser());
+        if (status!=null && status.equalsIgnoreCase("true")) {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "conta aprovada.", "USUARIO: "+user+" \n está aprovado por \nADMINISTRADOR:"+jwtFilter.getCurrentUser(), allAdmin);
+        } else {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "conta desabilitada.", "USUARIO: "+user+" \n está desabilitada por \nADMINISTRADOR:"+jwtFilter.getCurrentUser(), allAdmin);
+        }
     }
 }
