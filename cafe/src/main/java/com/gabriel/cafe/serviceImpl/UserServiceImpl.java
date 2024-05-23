@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import com.gabriel.cafe.dao.UserDao;
 import com.gabriel.cafe.service.UserService;
 import com.gabriel.cafe.utils.CafeUtils;
 import com.gabriel.cafe.wrapper.UserWrapper;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,7 +89,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> login(Map<String, String> requestMap) {
-        log.info("inside login", requestMap); 
         try {
             Authentication auth =  authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password"))
@@ -103,10 +104,8 @@ public class UserServiceImpl implements UserService {
                 }
             }
         } catch (BadCredentialsException ex) {
-            log.error("Credencial inválida", ex);
             return new ResponseEntity<String>("{\"message\":\""+"Credencial inválida."+"\"}", HttpStatus.UNAUTHORIZED);
         } catch (Exception ex) {
-            log.error("Erro durante a autenticação", ex);
             return new ResponseEntity<String>("{\"message\":\""+"Erro durante a autenticação."+"\"}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<String>("{\"message\":\""+"Credencial inválida."+"\"}", HttpStatus.UNAUTHORIZED);
@@ -115,18 +114,34 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<List<UserWrapper>> getAllUser() {
         try {
-            log.info("Checking if current user is admin.");
             if (jwtFilter.isAdmin()) {
-                log.info("User is admin. Fetching all users.");
-                List<UserWrapper> users = userDao.getAllUser();
-                return new ResponseEntity<>(users, HttpStatus.OK);
+                return new ResponseEntity<>(userDao.getAllUser(), HttpStatus.OK);
             } else {
-                log.warn("User is not admin. Unauthorized access.");
                 return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception ex) {
-            log.error("Error fetching users: ", ex);
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            ex.printStackTrace(); 
         }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> update(Map<String, String> requesMap) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                Optional<User> optional = userDao.findById(Integer.parseInt(requesMap.get("id")));
+                if (optional.isEmpty()) {
+                    userDao.updateStatus(requesMap.get("status"), Integer.parseInt(requesMap.get("id")));
+                    return CafeUtils.getResponseEntity("Usuário atualizado com sucesso.", HttpStatus.OK);
+                } else {
+                    CafeUtils.getResponseEntity("Id de usuário não existe", HttpStatus.OK);
+                }
+            } else {
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

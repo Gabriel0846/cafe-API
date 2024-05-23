@@ -49,8 +49,18 @@ public class UserRestImpl implements UserRest {
         try {
             return userService.getAllUser();
         } catch (Exception ex) {
-            log.error("Erro ao obter usuários: ", ex);
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            ex.printStackTrace();
         }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> atualizar(Map<String, String> requestMap) {
+        try {
+            return userService.update(requestMap);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
