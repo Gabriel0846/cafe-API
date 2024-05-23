@@ -112,19 +112,21 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<String>("{\"message\":\""+"Credencial inválida."+"\"}", HttpStatus.UNAUTHORIZED);
     }
 
-
     @Override
     public ResponseEntity<List<UserWrapper>> getAllUser() {
         try {
+            log.info("Checking if current user is admin.");
             if (jwtFilter.isAdmin()) {
-                
-            }else {
+                log.info("User is admin. Fetching all users.");
+                List<UserWrapper> users = userDao.getAllUser();
+                return new ResponseEntity<>(users, HttpStatus.OK);
+            } else {
+                log.warn("User is not admin. Unauthorized access.");
                 return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("Error fetching users: ", ex);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
 }

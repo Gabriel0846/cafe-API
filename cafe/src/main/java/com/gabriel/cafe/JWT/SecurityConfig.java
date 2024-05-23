@@ -45,19 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
-            .and()
-            .csrf().disable()
-            .authorizeRequests()
-            .antMatchers("/usuario/login", "/usuario/cadastrar", "/usuario/esqueceu_senha")
-            .permitAll()
-            .anyRequest()
-            .authenticated()
-            .and()
-            .exceptionHandling()
-            .and()
-            .sessionManagement()
+            .and().csrf().disable()
+            .authorizeRequests().antMatchers("/usuario/login", "/usuario/cadastrar", "/usuario/esqueceu_senha")
+            .permitAll().anyRequest().authenticated()
+            .and().exceptionHandling()
+            .and().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

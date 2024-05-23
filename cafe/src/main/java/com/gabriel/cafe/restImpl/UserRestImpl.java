@@ -15,6 +15,9 @@ import com.gabriel.cafe.service.UserService;
 import com.gabriel.cafe.utils.CafeUtils;
 import com.gabriel.cafe.wrapper.UserWrapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 public class UserRestImpl implements UserRest {
 
@@ -26,9 +29,9 @@ public class UserRestImpl implements UserRest {
         try {
             return userService.cadastrar(requestMap);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("Erro no cadastro: ", ex);
+            return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -36,20 +39,18 @@ public class UserRestImpl implements UserRest {
         try {
             return userService.login(requestMap);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("Erro no login: ", ex);
             return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @Override
     public ResponseEntity<List<UserWrapper>> getAllUser() {
         try {
             return userService.getAllUser();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("Erro ao obter usuários: ", ex);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<List<UserWrapper>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
 }
