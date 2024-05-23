@@ -157,4 +157,9 @@ public class UserServiceImpl implements UserService {
             emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "conta desabilitada.", "USUARIO: "+user+" \n está desabilitada por \nADMINISTRADOR:"+jwtFilter.getCurrentUser(), allAdmin);
         }
     }
+
+    @Override
+    public ResponseEntity<String> checarToken() {
+        return CafeUtils.getResponseEntity("true", HttpStatus.OK);
+    }
 }
