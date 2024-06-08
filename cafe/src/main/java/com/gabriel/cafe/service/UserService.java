@@ -15,7 +15,9 @@ public interface UserService {
 
     ResponseEntity<List<UserWrapper>> getAllUser();
 
-    ResponseEntity<String> update(Map<String, String> requesMap);
+    ResponseEntity<String> update(Map<String, String> requestMap);
 
     ResponseEntity<String> checarToken();
+
+    ResponseEntity<String> mudarSenha(Map<String, String> requestMap);
 }
