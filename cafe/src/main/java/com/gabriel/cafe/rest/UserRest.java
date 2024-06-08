@@ -31,4 +31,7 @@ public interface UserRest {
 
     @PostMapping(path = "/mudarSenha")
     ResponseEntity<String> mudarSenha(@RequestBody Map<String, String> requestMap);
+
+    @PostMapping(path = "/esqueceuSenha")
+    ResponseEntity<String> esqueceuSenha(@RequestBody Map<String, String> requestMap);
 }

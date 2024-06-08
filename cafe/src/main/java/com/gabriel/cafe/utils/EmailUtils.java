@@ -2,9 +2,13 @@ package com.gabriel.cafe.utils;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,5 +35,16 @@ public class EmailUtils {
             cc[i] = ccList.get(i);
         }
         return cc;
+    }
+
+    public void esqueceuSenha(String to, String subject, String password) throws MessagingException{
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setFrom("loremipsum@gmail.com");
+        helper.setTo(to);
+        helper.setSubject(subject);
+        String htmlMsg = "<p><b>Detalhes do Seu login no Cafe Management System</b><br><b>Email: </b> " + to + "<br><b>Senha: </b> " + password + "<br><a href=\"http://localhost:4200/\"> Clique aqui para fazer login</a></p>";
+        message.setContent(htmlMsg, "text/html");
+        emailSender.send(message);
     }
 }

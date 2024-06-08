@@ -25,6 +25,7 @@ import com.gabriel.cafe.service.UserService;
 import com.gabriel.cafe.utils.CafeUtils;
 import com.gabriel.cafe.utils.EmailUtils;
 import com.gabriel.cafe.wrapper.UserWrapper;
+import com.google.common.base.Strings;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -181,5 +182,18 @@ public class UserServiceImpl implements UserService {
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 
+    }
+
+    @Override
+    public ResponseEntity<String> esqueceuSenha(Map<String, String> requeMap) {
+        try {
+            User user = userDao.findByEmail(requeMap.get("email"));
+            if(!Objects.isNull(user) && !Strings.isNullOrEmpty(user.getEmail()))
+                emailUtils.esqueceuSenha(user.getEmail(), "Credenciais por Cafe Management System", user.getPassword());
+            return CafeUtils.getResponseEntity("As senha foi enviada para o email da conta.", HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

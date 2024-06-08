@@ -20,4 +20,6 @@ public interface UserService {
     ResponseEntity<String> checarToken();
 
     ResponseEntity<String> mudarSenha(Map<String, String> requestMap);
+
+    ResponseEntity<String> esqueceuSenha(Map<String, String> requeMap);
 }
