@@ -14,7 +14,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 
-@NamedQuery(name = "Category.getAllCategory", query = "select c from category c")
+@NamedQuery(name = "Category.getAllCategory", query = "select c from Category c")
 
 @Data
 @Entity
