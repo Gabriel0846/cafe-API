@@ -20,4 +20,7 @@ public interface CategoryRest {
 
     @GetMapping(path = "/buscar")
     ResponseEntity<List<Category>> getAllCategory(@RequestParam(required = false) String filterValue);
+
+    @PostMapping(path = "/atualizar")
+    ResponseEntity<String> updateCategoria(@RequestBody(required = true)Map<String, String> requestMap);
 }
