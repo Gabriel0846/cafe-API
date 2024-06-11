@@ -1,5 +1,7 @@
 package com.gabriel.cafe.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,12 @@ import com.gabriel.cafe.constents.CafeConstants;
 import com.gabriel.cafe.dao.CategoryDao;
 import com.gabriel.cafe.service.CategoryService;
 import com.gabriel.cafe.utils.CafeUtils;
+import com.google.common.base.Strings;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
@@ -59,6 +66,20 @@ public class CategoryServiceImpl implements CategoryService{
         }
         category.setNome(requestMap.get("nome"));
         return category; 
+    }
+
+    @Override
+    public ResponseEntity<List<Category>> getAllCategory(String filterValue) {
+        try {
+            if(!Strings.isNullOrEmpty(filterValue) && filterValue.equalsIgnoreCase("true")) {
+                log.info("inside if");
+                return new ResponseEntity<List<Category>>(categoryDao.getAllCategory(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(categoryDao.findAll(), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<List<Category>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
 }
