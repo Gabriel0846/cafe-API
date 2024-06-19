@@ -1,5 +1,7 @@
 package com.gabriel.cafe.restImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import com.gabriel.cafe.constents.CafeConstants;
 import com.gabriel.cafe.rest.ProductRest;
 import com.gabriel.cafe.service.ProductService;
 import com.gabriel.cafe.utils.CafeUtils;
+import com.gabriel.cafe.wrapper.ProductWrapper;
 
 @RestController
 public class ProductRestImpl implements ProductRest{
@@ -26,6 +29,16 @@ public class ProductRestImpl implements ProductRest{
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getAllProduct() {
+        try {
+            return productService.getAllProduct();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
 }

@@ -1,5 +1,7 @@
 package com.gabriel.cafe.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.gabriel.cafe.constents.CafeConstants;
 import com.gabriel.cafe.dao.ProductDao;
 import com.gabriel.cafe.service.ProductService;
 import com.gabriel.cafe.utils.CafeUtils;
+import com.gabriel.cafe.wrapper.ProductWrapper;
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 @Service
@@ -70,6 +73,16 @@ public class ProductServiceImpl implements ProductService{
         product.setDescricao(requestMap.get("descricao"));
         product.setPreco(Integer.parseInt(requestMap.get("preco")));
         return product;
+    }
+
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getAllProduct() {
+        try {
+            return new ResponseEntity<>(productDao.getAllProduct(), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
 }
