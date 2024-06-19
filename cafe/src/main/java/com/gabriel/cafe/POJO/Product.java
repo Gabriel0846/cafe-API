@@ -32,7 +32,7 @@ public class Product implements Serializable{
     private Integer id;
 
     @Column(name = "nome")
-    private String name;
+    private String nome;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "categoria_fk", nullable = false)

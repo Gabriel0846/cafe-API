@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.gabriel.cafe.JWT.JwtFilter;
+import com.gabriel.cafe.POJO.Category;
+import com.gabriel.cafe.POJO.Product;
 import com.gabriel.cafe.constents.CafeConstants;
 import com.gabriel.cafe.dao.ProductDao;
 import com.gabriel.cafe.service.ProductService;
@@ -28,8 +30,10 @@ public class ProductServiceImpl implements ProductService{
         try {
             if(jwtFilter.isAdmin()){
                 if (validateProductMap(requestMap, false)) {
-                    
+                    productDao.save(getProductFromMap(requestMap, false));
+                    return CafeUtils.getResponseEntity("Produto adicionado com sucesso.", HttpStatus.OK);
                 }
+                return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
             } else {
                 return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
             }
@@ -49,6 +53,23 @@ public class ProductServiceImpl implements ProductService{
             }
         }
         return false;
+    }
+
+    private Product getProductFromMap(Map<String, String> requestMap, boolean isAdd) {
+        Category category = new Category();
+        category.setId(Integer.parseInt(requestMap.get("categoryId")));
+
+        Product product = new Product();
+        if (isAdd) {
+            product.setId(Integer.parseInt(requestMap.get("id")));
+        } else{
+            product.setStatus("true");
+        }
+        product.setCategory(category);
+        product.setNome(requestMap.get("nome"));
+        product.setDescricao(requestMap.get("descricao"));
+        product.setPreco(Integer.parseInt(requestMap.get("preco")));
+        return product;
     }
     
 }

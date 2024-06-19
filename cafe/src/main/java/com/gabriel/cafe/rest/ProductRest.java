@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping(path = "/product")
+@RequestMapping(path = "/produto")
 public interface ProductRest {
 
     @PostMapping(path = "/adicionar")
