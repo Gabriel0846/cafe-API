@@ -20,4 +20,6 @@ public interface ProductRest {
     @GetMapping(path = "/buscar")
     ResponseEntity<List<ProductWrapper>> getAllProduct();
 
+    @PostMapping(path = "/atualizar")
+    ResponseEntity<String> updateProduct(@RequestBody Map<String, String> requeMap);
 }
