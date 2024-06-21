@@ -19,8 +19,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import lombok.Data;
 
 
-@NamedQuery(name = "Product.getAllProduct", query = "select new ")
-
+@NamedQuery(name = "Product.getAllProduct", 
+            query = "SELECT new com.gabriel.cafe.wrapper.ProductWrapper(p.id, p.nome, p.descricao, p.preco, p.status, p.category.id, p.category.nome) FROM Product p")
 
 @Data
 @Entity

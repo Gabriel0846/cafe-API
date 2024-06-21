@@ -16,4 +16,14 @@ public class ProductWrapper {
     public ProductWrapper() {
         
     }
+
+    public ProductWrapper(Integer id, String nome, String descricao, Integer preco, String status, Integer categoryId, String categoryNome){
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.preco = preco;
+        this.status = status;
+        this.categoryId = categoryId;
+        this.categoryNome = categoryNome;
+    }
 }
