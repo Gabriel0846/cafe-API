@@ -92,6 +92,14 @@ public class ProductServiceImpl implements ProductService{
             if (jwtFilter.isAdmin()) {
                 if (validateProductMap(requestMap, true)) {
                     Optional<Product> optional = productDao.findById(Integer.parseInt(requestMap.get("id")));
+                    if (!optional.isEmpty()){
+                        Product product =getProductFromMap(requestMap, true);
+                        product.setStatus(optional.get().getStatus());
+                        productDao.save(product);
+                        return CafeUtils.getResponseEntity("Produto atualizado com sucesso.", HttpStatus.OK);
+                    } else {
+                        return CafeUtils.getResponseEntity("Id do produto não existe.", HttpStatus.OK);
+                    }
                 } else {
                     return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
                 }
