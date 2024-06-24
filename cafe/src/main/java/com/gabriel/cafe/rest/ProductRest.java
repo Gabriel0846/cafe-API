@@ -26,4 +26,7 @@ public interface ProductRest {
 
     @PostMapping(path = "/deletar/{id}")
     ResponseEntity<String> deleteProduct(@PathVariable Integer id);
+
+    @PostMapping(path = "/atualizarstatus")
+    ResponseEntity<String> updateStatus(@RequestBody Map<String, String> requestMap);
 }
