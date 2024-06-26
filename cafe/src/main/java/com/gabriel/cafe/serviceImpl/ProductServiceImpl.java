@@ -138,6 +138,7 @@ public class ProductServiceImpl implements ProductService{
                 Optional optional = productDao.findById(Integer.parseInt(requestMap.get("id")));
                 if (!optional.isEmpty()) {
                     productDao.updateProductStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                    return CafeUtils.getResponseEntity("Status de produto atualizado com sucesso.", HttpStatus.OK);
                 }
                 return CafeUtils.getResponseEntity("Produto não existe.", HttpStatus.OK);
             } else {
