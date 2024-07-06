@@ -29,4 +29,7 @@ public interface ProductRest {
 
     @PostMapping(path = "/atualizarstatus")
     ResponseEntity<String> updateStatus(@RequestBody Map<String, String> requestMap);
+
+    @GetMapping(path = "/buscarcategoria/{id}")
+    ResponseEntity<List<ProductWrapper>> getByCategory(@PathVariable Integer id);
 }
